@@ -1,0 +1,28 @@
+<%- include('partials/head', { title: 'Content studio', isAdmin: true }) %>
+<%- include('partials/admin-header') %>
+<main id="main" class="wrap admin-main">
+  <div class="section-heading"><div><p class="eyebrow">CONTENT STUDIO</p><h1>Your ecosystem, up to date.</h1><p>Make a change. Save it. It's live.</p></div><a class="button" href="/admin/resources/new">+ Add resource</a></div>
+  <% if (notice) { %><p class="notice" role="status"><%= notice %></p><% } %>
+  <section aria-labelledby="manage-title"><div class="admin-section-heading"><h2 id="manage-title">Resources <span class="muted">(<%= resources.length %>)</span></h2><p>Lower display-order numbers appear first. Hidden resources are not public.</p></div>
+    <div class="admin-resource-list">
+      <% for (const resource of resources) { %>
+      <article class="admin-resource"><div class="admin-logo"><% if (resource.logo) { %><img src="<%= resource.logo %>" alt="" width="90" height="45"><% } else { %><span><%= resource.name.slice(0, 2) %></span><% } %></div><div class="admin-resource-info"><h3><a href="/admin/resources/<%= resource.id %>"><%= resource.name %></a></h3><p><%= resource.category %> &middot; Order <%= resource.position %></p></div><span class="visibility <%= resource.visible ? '' : 'is-hidden' %>"><%= resource.visible ? 'Published' : 'Hidden' %></span><a class="button button-outline button-small" href="/admin/resources/<%= resource.id %>">Edit<span class="sr-only"> <%= resource.name %></span></a></article>
+      <% } %>
+    </div>
+  </section>
+  <section id="page-content" class="panel settings-panel" aria-labelledby="settings-title">
+    <p class="eyebrow">THE BIGGER PICTURE</p><h2 id="settings-title">Page content &amp; contact</h2><p>These changes are published as soon as you save. All fields are plain text; HTML is not supported.</p>
+    <form action="/admin/settings" method="post" class="stack">
+      <input type="hidden" name="_csrf" value="<%= csrf %>"><input type="hidden" name="revision" value="<%= settings.revision %>">
+      <div class="form-grid"><label>Hero eyebrow<input name="eyebrow" value="<%= settings.eyebrow %>" maxlength="200" required></label><label>Hero headline<textarea name="title" maxlength="200" rows="2" required><%= settings.title %></textarea></label></div>
+      <label>Introduction<textarea name="introduction" rows="3" maxlength="2000" required><%= settings.introduction %></textarea></label>
+      <div class="form-grid"><label>About headline<textarea name="aboutTitle" rows="2" maxlength="200" required><%= settings.aboutTitle %></textarea></label><label>About description<textarea name="aboutText" rows="5" maxlength="2000" required><%= settings.aboutText %></textarea></label></div>
+      <div class="form-grid"><label>Contact name<input name="contactName" value="<%= settings.contactName %>" maxlength="200" required></label><label>Contact email<input name="contactEmail" type="email" value="<%= settings.contactEmail %>" maxlength="200" required></label></div>
+      <label>Postal address<textarea name="address" rows="4" maxlength="2000" required><%= settings.address %></textarea></label>
+      <div class="form-grid"><label>GitHub URL<input name="githubUrl" type="url" value="<%= settings.githubUrl %>" maxlength="2048" required></label><label>Group website URL<input name="groupUrl" type="url" value="<%= settings.groupUrl %>" maxlength="2048" required></label></div>
+      <div class="form-grid"><label>Privacy notice URL (optional)<input name="privacyUrl" type="url" value="<%= settings.privacyUrl %>" maxlength="2048"></label><label>Legal notice URL (optional)<input name="legalUrl" type="url" value="<%= settings.legalUrl %>" maxlength="2048"></label></div>
+      <p class="field-help">Before launch, add the institution-approved privacy and legal notice links.</p>
+      <div><button class="button" type="submit">Save page content &#8594;</button></div>
+    </form>
+  </section>
+</main><script src="/assets/admin.js" defer></script></body></html>

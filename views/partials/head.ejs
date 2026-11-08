@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#153e35">
+  <title><%= title %> | Natural Products Online</title>
+  <% if (typeof description !== 'undefined') { %><meta name="description" content="<%= description %>"><% } %>
+  <% if (typeof origin !== 'undefined') { %>
+  <link rel="canonical" href="<%= origin %>/">
+  <meta property="og:title" content="Natural Products Online">
+  <meta property="og:description" content="<%= description %>">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="<%= origin %>/">
+  <% } %>
+  <link rel="icon" href="/assets/logos/natural-products.webp" type="image/webp">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body<% if (typeof isAdmin !== 'undefined' && isAdmin) { %> class="admin-body"<% } %>>
+<a class="skip-link" href="#main">Skip to content</a>

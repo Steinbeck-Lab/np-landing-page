@@ -1,0 +1,62 @@
+<%- include('partials/head', { title: 'Open resources for natural products research', description: settings.introduction, origin }) %>
+<header class="site-header wrap">
+  <a class="brand" href="/"><img src="/assets/logos/natural-products.webp" width="84" height="65" alt=""><span>Natural Products <span class="brand-sub">ONLINE</span></span></a>
+  <nav aria-label="Main navigation"><a href="#resources">Resources</a><a href="#contact">Contact</a></nav>
+</header>
+<main id="main">
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="status-dot"></span><%= settings.eyebrow %></p>
+      <h1 id="hero-title"><% for (const part of settings.title.split(/(\s+)/)) { %><% if (part.trim()) { %><span class="hero-title-word"><span class="hero-title-text"><%= part %></span></span><% } else { %><%= part %><% } %><% } %> <img class="hero-title-logo" src="/assets/logos/natural-products.webp" width="100" height="77" alt="" aria-hidden="true"></h1>
+    </div>
+    <figure class="hero-art" aria-label="Animated 2D structures of natural products (caffeine, quercetin), generated with RDKit">
+      <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+      <span class="art-label label-one" aria-hidden="true">NATURAL PRODUCT</span><span class="art-label label-two" id="mol-formula" aria-hidden="true">C&#8328;H&#8321;&#8320;N&#8324;O&#8322;</span>
+      <svg class="mol-canvas" viewBox="0 0 400 400" role="img" aria-label="Chemical structure of a natural product"><g id="mol"></g></svg>
+      <figcaption class="art-caption"><span class="status-dot"></span> <span id="mol-name">Caffeine</span></figcaption>
+    </figure>
+  </section>
+  <section class="resources-section wrap" id="resources" aria-labelledby="resources-title">
+    <div class="section-heading"><div><h2 id="resources-title">Resources</h2></div></div>
+    <div class="resource-toolbar">
+      <div class="filters" role="group" aria-label="Filter resources by category" hidden>
+        <button type="button" class="filter active" data-category="All" aria-pressed="true">All resources <span><%= resources.length %></span></button>
+        <% for (const category of categories) { if (resources.some(r => r.category === category)) { %><button type="button" class="filter" data-category="<%= category %>" aria-pressed="false"><%= category %></button><% } } %>
+      </div>
+      <p class="resource-count" role="status" aria-live="polite"><%= resources.length %></p>
+    </div>
+    <div class="resource-grid">
+      <% for (const resource of resources) { %>
+      <article class="resource-card" data-resource-category="<%= resource.category %>">
+        <div class="card-top"><span class="category-tag"><%= resource.category %></span><% if (resource.featured) { %><span class="featured-label">Featured</span><% } %></div>
+        <div class="resource-logo"><% if (resource.logo) { %><img src="<%= resource.logo %>" alt="" loading="lazy" decoding="async" width="260" height="96"><% } else { %><span class="logo-fallback" aria-hidden="true"><%= resource.name.slice(0, 2).toUpperCase() %></span><% } %></div>
+        <h3><a class="card-link" href="<%= resource.url %>" title="<%= resource.description %>"><%= resource.name %><span aria-hidden="true">&#8599;</span></a></h3>
+        <p class="card-desc"><%= resource.description %></p>
+      </article>
+      <% } %>
+    </div>
+    <% if (!resources.length) { %><p class="empty-state">Our resource directory is being updated. Please check back soon.</p><% } %>
+  </section>
+</main>
+<footer class="footer">
+  <div class="foot-main wrap" id="contact">
+    <div class="foot-cta">
+      <h2 class="foot-title">Get in touch</h2>
+      <div class="foot-actions">
+        <a class="pill pill-solid" href="mailto:<%= settings.contactEmail %>"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Email us</a>
+        <a class="pill pill-ghost" href="<%= settings.githubUrl %>">Report an issue<span aria-hidden="true">&#8599;</span></a>
+      </div>
+      <a class="foot-email" href="mailto:<%= settings.contactEmail %>"><%= settings.contactEmail %></a>
+      <p class="foot-about">Natural Products Online is an open-source open-data repository for natural products. Please submit bug reports, feature requests and general issues through the issues tracker at <a href="<%= settings.githubUrl %>">GitHub</a>. Natural Products Online is developed and maintained by the <a href="<%= settings.groupUrl %>">Steinbeck group</a> at the Friedrich Schiller University Jena, Germany. The code for this web application is released under the MIT license.</p>
+    </div>
+    <div class="foot-side">
+      <a class="foot-logo" href="<%= settings.groupUrl %>"><img src="/assets/logos/steinbeck-group.webp" width="833" height="200" loading="lazy" decoding="async" alt="Steinbeck Group — Cheminformatics and Computational Metabolomics, Friedrich Schiller University Jena"></a>
+      <address><%= settings.address %></address>
+      <a class="foot-dir" href="https://www.openstreetmap.org/search?query=<%= encodeURIComponent(settings.address.replaceAll('\n', ', ')) %>">Get directions &#8599;</a>
+    </div>
+  </div>
+  <div class="site-footer wrap"><a class="brand footer-brand" href="/"><img src="/assets/logos/natural-products.webp" width="40" height="31" alt=""><span>Natural Products Online</span></a><p>Copyright &copy; CC-BY-SA <%= new Date().getFullYear() %></p><nav aria-label="Footer"><a class="footer-github" href="<%= settings.githubUrl %>"><%- include('partials/github-icon') %><span>GitHub &#8599;</span></a><% if (settings.privacyUrl) { %><a href="<%= settings.privacyUrl %>">Privacy</a><% } %><% if (settings.legalUrl) { %><a href="<%= settings.legalUrl %>">Legal notice</a><% } %></nav></div>
+</footer>
+<script src="/assets/molecule.js" defer></script>
+<script src="/assets/site.js" defer></script>
+</body></html>

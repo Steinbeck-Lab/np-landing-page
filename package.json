@@ -1,0 +1,37 @@
+{
+  "name": "natural-products-online",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.6.0"
+  },
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "start": "node --env-file-if-exists=.env src/server.js",
+    "dev": "node --env-file-if-exists=.env --watch src/server.js",
+    "admin": "node --env-file-if-exists=.env scripts/admin.js",
+    "import-logos": "node scripts/import-logos.js",
+    "backup": "node --env-file-if-exists=.env scripts/backup.js",
+    "test": "node --test --test-concurrency=1",
+    "test:browser": "node scripts/browser-check.js",
+    "format": "prettier --write 'src/**/*.js' 'scripts/*.js' 'public/*.{css,js}' 'test/*.js' '*.json' '*.md'",
+    "format:check": "prettier --check 'src/**/*.js' 'scripts/*.js' 'public/*.{css,js}' 'test/*.js' '*.json' '*.md'",
+    "check": "node --check src/app.js && node --check src/store.js && node --check src/security.js && node --check public/site.js && node --check public/admin.js"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.2.1",
+    "express-session": "^1.18.2",
+    "helmet": "^8.1.0",
+    "multer": "^2.0.2",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.0",
+    "playwright": "^1.56.1",
+    "prettier": "^3.6.2",
+    "supertest": "^7.1.4"
+  }
+}

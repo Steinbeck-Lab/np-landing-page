@@ -1,0 +1,37 @@
+# Production deployment on port 80. Production mode needs an https:// origin and
+# secure cookies, so terminate TLS in front of this (load balancer, CDN or
+# reverse proxy) and forward to port 80 with X-Forwarded-Proto.
+#
+# 1. Create a .env next to this file:
+#      SITE_ORIGIN=https://your-domain.example      (exact origin, no trailing slash)
+#      SESSION_SECRET=<48+ random chars>             (openssl rand -hex 48)
+#      TRUST_PROXY=1                                 (exactly one proxy in front)
+# 2. docker compose up -d --build
+# 3. docker compose exec app node scripts/admin.js <username>   (create an admin)
+services:
+  app:
+    build: .
+    image: np-landing-page
+    restart: unless-stopped
+    init: true
+    ports:
+      - "80:80"
+    environment:
+      SITE_ORIGIN: ${SITE_ORIGIN:?Set SITE_ORIGIN, e.g. https://example.org}
+      SESSION_SECRET: ${SESSION_SECRET:?Set SESSION_SECRET (openssl rand -hex 48)}
+      TRUST_PROXY: ${TRUST_PROXY:-1}
+    volumes:
+      - np-data:/data
+    sysctls:
+      # lets the non-root user bind port 80 inside the container
+      net.ipv4.ip_unprivileged_port_start: 0
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  np-data:

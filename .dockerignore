@@ -1,0 +1,15 @@
+.git
+.github
+node_modules
+data
+backups
+coverage
+.env
+.env.*
+!.env.example
+test
+*.md
+Dockerfile
+docker-compose.yml
+.dockerignore
+.DS_Store

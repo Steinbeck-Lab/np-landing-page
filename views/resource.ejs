@@ -1,0 +1,32 @@
+<%- include('partials/head', { title: resource.id ? `Edit ${resource.name}` : 'Add resource', isAdmin: true }) %>
+<%- include('partials/admin-header') %>
+<main id="main" class="wrap admin-main narrow">
+  <a class="text-link" href="/admin">&#8592; All resources</a><p class="eyebrow form-eyebrow">RESOURCE EDITOR</p><h1><%= resource.id ? resource.name : 'Something new to discover.' %></h1>
+  <% if (error) { %><p class="notice notice-error" role="alert"><%= error %></p><% } %>
+  <% if (typeof notice !== 'undefined' && notice) { %><p class="notice" role="status"><%= notice %></p><% } %>
+  <% if (typeof error !== 'undefined' && !error) { %><p class="muted">Save details below. Logo uploads are saved separately.</p><% } %>
+  <section class="panel">
+    <form method="post" action="/admin/resources<%= resource.id ? '/' + resource.id : '' %>" class="stack">
+      <input type="hidden" name="_csrf" value="<%= csrf %>"><% if (resource.id) { %><input type="hidden" name="revision" value="<%= resource.revision %>"><% } %>
+      <label>Resource name<input name="name" value="<%= resource.name %>" maxlength="100" required></label>
+      <label>Website URL<input name="url" type="url" value="<%= resource.url %>" maxlength="2048" placeholder="https://example.org" required></label>
+      <label>Short description<textarea name="description" maxlength="600" rows="4" required><%= resource.description %></textarea></label>
+      <div class="form-grid"><label>Category<select name="category" required><% for (const category of categories) { %><option<%= category === resource.category ? ' selected' : '' %>><%= category %></option><% } %></select></label><label>Display order<input name="position" type="number" min="0" max="10000" step="1" value="<%= resource.position %>" required><span class="field-help">Lower numbers appear first.</span></label></div>
+      <div class="checkbox-row"><label class="checkbox"><input type="checkbox" name="visible"<%= resource.visible ? ' checked' : '' %>> Published on the website</label><label class="checkbox"><input type="checkbox" name="featured"<%= resource.featured ? ' checked' : '' %>> Featured badge</label></div>
+      <div class="form-actions"><button class="button" type="submit"><%= resource.id ? 'Save resource' : 'Create resource' %> &#8594;</button><a class="text-link" href="/admin">Cancel</a></div>
+    </form>
+  </section>
+  <% if (resource.id) { %>
+  <section class="panel logo-panel" aria-labelledby="logo-title"><h2 id="logo-title">Project logo</h2><p>Use a PNG, JPEG, or WebP image up to 2 MB and 16 megapixels. Images are optimized automatically. SVG and animated images are not accepted.</p>
+    <% if (resource.logo) { %><div class="logo-preview"><img src="<%= resource.logo %>" alt="Current logo for <%= resource.name %>" width="260" height="100"></div><% } %>
+    <form action="/admin/resources/<%= resource.id %>/logo" method="post" enctype="multipart/form-data" class="stack" data-logo-form>
+      <input type="hidden" name="_csrf" value="<%= csrf %>"><input type="hidden" name="revision" value="<%= resource.revision %>">
+      <label>Choose a logo<input name="logo" type="file" accept="image/png,image/jpeg,image/webp" required></label>
+      <div><button class="button button-outline" type="submit">Upload &amp; publish logo</button></div><p data-upload-status role="status" aria-live="polite"></p>
+    </form>
+    <noscript><p class="notice notice-error">JavaScript is required for secure logo uploads. Resource and page-text editing work without JavaScript.</p></noscript>
+    <% if (resource.logo) { %><form method="post" action="/admin/resources/<%= resource.id %>/remove-logo"><input type="hidden" name="_csrf" value="<%= csrf %>"><input type="hidden" name="revision" value="<%= resource.revision %>"><button class="text-button" type="submit">Remove logo</button></form><% } %>
+  </section>
+  <section class="panel danger-panel"><h2>Delete resource</h2><p>Removes this resource from the directory. To temporarily unpublish it, uncheck Published instead.</p><form method="post" action="/admin/resources/<%= resource.id %>/delete" data-confirm-delete><input type="hidden" name="_csrf" value="<%= csrf %>"><input type="hidden" name="revision" value="<%= resource.revision %>"><label class="checkbox"><input type="checkbox" required> I understand that this deletes the resource.</label><button class="button button-danger" type="submit">Delete resource</button></form></section>
+  <% } else { %><p class="notice">Create the resource first, then upload its logo.</p><% } %>
+</main><script src="/assets/admin.js" defer></script></body></html>
